@@ -97,8 +97,14 @@ public class PvP implements TabExecutor {
 	private void togglePvPAdmin(final CommandSender sender, final String playerName, final boolean state, final boolean toggle) {
 		if (!CombatUtils.isOnlineWithFeedback(sender, playerName))
 			return;
-		final PvPlayer specifiedPlayer = ph.get(Bukkit.getPlayer(playerName));
-		specifiedPlayer.setPvP(toggle ? !specifiedPlayer.hasPvPEnabled() : state);
+		final Player player = Bukkit.getPlayer(playerName);
+		final PvPlayer specifiedPlayer = ph.get(player);
+		boolean pvp = toggle ? !specifiedPlayer.hasPvPEnabled() : state;
+		if (pvp && !player.hasPermission("pvpmanager.pvpstatus.change")) {
+			sender.sendMessage(Messages.getErrorPvPToggleAdminForcePvP().replace("%p", playerName));
+			return;
+		}
+		specifiedPlayer.setPvP(pvp);
 		final String stateMessage = specifiedPlayer.hasPvPEnabled() ? Messages.getEnabled() : Messages.getDisabled();
 		sender.sendMessage(Messages.getPvPToggleAdminChanged().replace("%p", playerName).replace("%state", stateMessage));
 	}

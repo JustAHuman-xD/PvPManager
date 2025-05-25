@@ -35,6 +35,7 @@ public class Messages {
 	private static String errorPvpCooldown;
 	private static String errorPvpToggleNoPvp;
 	private static String errorPvpToggleForcePvp;
+	private static String errorPvpToggleAdminForcePvp;
 	private static String otherStatusEnabled;
 	private static String othersStatusDisabled;
 	private static String pvpDisabled;
@@ -204,6 +205,7 @@ public class Messages {
 		errorPvpCooldown = getString("Error_PvP_Cooldown");
 		errorPvpToggleNoPvp = getString("Error_PvPToggle_NoPvP");
 		errorPvpToggleForcePvp = getString("Error_PvPToggle_ForcePvP");
+		errorPvpToggleAdminForcePvp = getString("Error_PvPToggle_Admin_ForcePvP");
 		errorPermission = getString("Error_Permission");
 		errorNotPlayer = getString("Error_Not_Player");
 		moneyReward = getString("Money_Reward");
@@ -322,6 +324,10 @@ public class Messages {
 
 	public static String getErrorPvPToggleForcePvP() {
 		return errorPvpToggleForcePvp;
+	}
+
+	public static String getErrorPvPToggleAdminForcePvP() {
+		return errorPvpToggleAdminForcePvp;
 	}
 
 	public static String getAlreadyDisabled() {

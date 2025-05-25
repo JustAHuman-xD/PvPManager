@@ -24,6 +24,7 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 		registerPlaceholder("in_combat");
 		registerPlaceholder("combat_timeleft");
 		registerPlaceholder("pvp_status");
+		registerPlaceholder("pvp_status_prefix");
 		registerPlaceholder("pvp_command_timeleft");
 		registerPlaceholder("is_newbie");
 		registerPlaceholder("newbie_timeleft");
@@ -46,6 +47,8 @@ public class PlaceHolderAPI extends PlaceholderExpansion {
 			return getPAPIBoolean(p.isInCombat());
 		case "pvp_status":
 			return getPAPIBoolean(p.hasPvPEnabled());
+		case "pvp_status_prefix":
+			return p.hasPvPEnabled() ? Settings.getToggleColorOn() : Settings.getToggleColorOff();
 		case "is_newbie":
 			return getPAPIBoolean(p.isNewbie());
 		case "has_override":
