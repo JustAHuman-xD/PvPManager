@@ -44,10 +44,12 @@ public class PvPlayer extends EcoPlayer {
 	private boolean pvpLogged;
 	private boolean override;
 	private boolean loaded;
+	private boolean lastDeathWasPvP;
 	private long toggleTime;
 	private long respawnTime;
 	private long taggedTime;
 	private long totalTagTime;
+	private long lastKillCommandTime;
 	private NewbieTask newbieTask;
 	private PvPlayer enemy;
 	private final Set<PvPlayer> lastHitters = new HashSet<>();
@@ -142,6 +144,7 @@ public class PvPlayer extends EcoPlayer {
 				message(Messages.getNewbieProtectionRemoved());
 				newbieTask.cancel();
 			}
+			this.newbieTask = null;
 		} else {
 			message(Messages.getErrorNotNewbie());
 		}
@@ -169,6 +172,8 @@ public class PvPlayer extends EcoPlayer {
 		if (Settings.isGlowingInCombat() && CombatUtils.isVersionAtLeast(Settings.getMinecraftVersion(), "1.9")) {
 			getPlayer().setGlowing(true);
 		}
+
+		getPlayer().closeInventory();
 
 		if (nametag != null && Settings.useNameTag()) {
 			executor.execute(nametag::setInCombat);
@@ -318,10 +323,29 @@ public class PvPlayer extends EcoPlayer {
 		return Math.max(getUntagTime() - System.currentTimeMillis(), 0);
 	}
 
+	public boolean canExecuteKillCommand() {
+		final int cooldown = Settings.getCommandsOnKillCooldown();
+		if (cooldown == -1)
+			return true;
+		if (!CombatUtils.hasTimePassed(lastKillCommandTime, cooldown)) {
+			return false;
+		}
+		lastKillCommandTime = System.currentTimeMillis();
+		return true;
+	}
+
+	public boolean wasLastDeathPvP() {
+		return lastDeathWasPvP;
+	}
+
+	public void setLastDeathWasPvP(final boolean lastDeathWasPvP) {
+		this.lastDeathWasPvP = lastDeathWasPvP;
+	}
+
 	private synchronized void loadData() {
-		if (plugin.getStorageManager().getStorage().userExists(this)) {
-			loadUserData(plugin.getStorageManager().getStorage().getUserData(this));
-		} else if (Settings.isNewbieProtectionEnabled() && !getPlayer().hasPlayedBefore()) {
+		final Map<String, Object> userData = plugin.getStorageManager().getStorage().getUserData(this);
+		loadUserData(userData);
+		if (Settings.isNewbieProtectionEnabled() && userData.isEmpty() && !getPlayer().hasPlayedBefore()) {
 			setNewbie(true);
 		}
 		if (getCombatWorld().isPvPForced() == CombatWorld.WorldOptionState.ON) {
@@ -343,12 +367,17 @@ public class PvPlayer extends EcoPlayer {
 						+ "Nametag support disabled until Folia supports the scoreboard API or use the TAB plugin with PvPManager premium");
 			}
 		}
+		plugin.getStorageManager().getStorage().saveUserData(this);
 		this.loaded = true;
 		notifyAll();
 		Log.debug("Finished loading data for " + this + (nametag != null ? " with " + nametag.getClass().getSimpleName() : ""));
 	}
 
 	private void loadUserData(final Map<String, Object> userData) {
+		if (userData.isEmpty()) {
+			return;
+		}
+
 		final Object pvpstate = userData.get(UserDataFields.PVPSTATUS);
 		if (pvpstate instanceof Integer) {
 			this.pvpState = (int) pvpstate != 0;

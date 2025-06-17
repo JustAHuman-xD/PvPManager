@@ -106,6 +106,9 @@ Tagged In Combat:
     Cooldown: 1
     # If enabled, will retag the player when they throw an enderpearl
     Renew Tag: true
+  WindCharge:
+    # If enabled, will retag the player when they use a wind charge
+    Renew Tag: true
   Block:
     EnderPearls: false
     ChorusFruits: false
@@ -180,6 +183,11 @@ Player Kills:
   # Commands to execute on kill (<player> is the killer, <victim> is the victim, <item> is the item material in hand)
   Commands On Kill:
     - pvp <victim> off
+  # Time in seconds between kill commands, -1 to disable cooldown
+  Commands On Kill Cooldown: -1
+  # Commands to execute on respawn (<player> is the respawning player)
+  Commands On Respawn:
+    - 'examplecommand <player> respawned after dying in PvP combat'
   WorldGuard Exclusions: []
 
 # Section for PvP Toggle command - /pvp

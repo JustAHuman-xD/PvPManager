@@ -17,7 +17,7 @@
 	<url>https://github.com/ChanceSD/PvPManager</url>
 
 	<properties>
-		<config.version>82</config.version>
+		<config.version>83</config.version>
 		<database.version>1</database.version>
 	</properties>
 
@@ -209,7 +209,7 @@
 		<dependency>
 			<groupId>com.palmergames.bukkit.towny</groupId>
 			<artifactId>towny</artifactId>
-			<version>0.101.1.5</version>
+			<version>0.101.1.12</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -217,7 +217,7 @@
 		<dependency>
 			<groupId>net.william278.huskclaims</groupId>
 			<artifactId>huskclaims-bukkit</artifactId>
-			<version>1.5.2</version>
+			<version>1.5.8</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -275,19 +275,19 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>5.12.1</version>
+			<version>5.13.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-suite</artifactId>
-			<version>1.12.1</version>
+			<version>1.13.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>5.16.1</version>
+			<version>5.18.0</version>
 			<scope>test</scope>
 		</dependency>
 

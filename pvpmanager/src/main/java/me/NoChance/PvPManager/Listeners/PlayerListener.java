@@ -119,7 +119,7 @@ public class PlayerListener implements Listener {
 	public final void onPlayerLogout(final PlayerQuitEvent event) {
 		final Player player = event.getPlayer();
 		final PvPlayer pvPlayer = ph.get(player);
-		Log.debug(player.getName() + " quit with reason: " + event.getQuitMessage() + " - In combat: " + pvPlayer.isInCombat());
+		Log.debug(player.getName() + " quit with message: " + event.getQuitMessage() + " - In combat: " + pvPlayer.isInCombat());
 		if (pvPlayer.isInCombat() && !pvPlayer.hasPerm(Permissions.EXEMPT_COMBAT_LOG)) {
 			if (Settings.isLogToFile()) {
 				ph.getConfigManager().getLog().logCombatLog(pvPlayer);
@@ -177,7 +177,10 @@ public class PlayerListener implements Listener {
 			if (Settings.getMoneyPenalty() > 0) {
 				pvPlayer.applyPenalty();
 			}
-			CombatUtils.executeCommands(Settings.getCommandsOnKill(), killer, killer.getName(), player.getName());
+			if (pKiller.canExecuteKillCommand()) {
+				CombatUtils.executeCommands(Settings.getCommandsOnKill(), killer, killer.getName(), player.getName());
+			}
+			pvPlayer.setLastDeathWasPvP(true);
 		}
 	}
 
@@ -365,9 +368,13 @@ public class PlayerListener implements Listener {
 	public final void onPlayerRespawn(final PlayerRespawnEvent event) {
 		if (CombatUtils.isWorldExcluded(event.getPlayer().getWorld().getName()))
 			return;
+		final PvPlayer combatPlayer = ph.get(event.getPlayer());
 		if (Settings.isKillAbuseEnabled() && Settings.getRespawnProtection() != 0) {
-			final PvPlayer player = ph.get(event.getPlayer());
-			player.setRespawnTime(System.currentTimeMillis());
+			combatPlayer.setRespawnTime(System.currentTimeMillis());
+		}
+		if (combatPlayer.wasLastDeathPvP()) {
+			CombatUtils.executeCommands(Settings.getCommandsOnRespawn(), event.getPlayer(), event.getPlayer().getName());
+			combatPlayer.setLastDeathWasPvP(false);
 		}
 	}
 

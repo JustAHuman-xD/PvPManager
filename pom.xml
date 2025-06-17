@@ -11,7 +11,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<sonar.organization>chancesd</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-		<revision>3.18.44</revision>
+		<revision>3.19.3</revision>
 	</properties>
 
 	<distributionManagement>
@@ -139,7 +139,7 @@
 					<plugin>
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
-						<version>0.8.12</version>
+						<version>0.8.13</version>
 						<executions>
 							<execution>
 								<id>prepare-agent</id>
